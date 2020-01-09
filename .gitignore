@@ -1,0 +1,11 @@
+# Default
+.mdata
+.env
+.htpasswd
+*.key
+*.crt
+*.pem
+app
+
+# IDEs and text editors
+.idea
