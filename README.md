@@ -23,50 +23,48 @@ make -v
 make init-project
 ```
 
-2. Set up .env in *app* path ( Laravel configuration file )
-
 ##### Existing project
 
 1. Copy your laravel project into *app* path
 
-2. Configure main env file
+2. Configure main env file:
 
 ```
 make configure-env
 ```
 
-3. Build containerts and start that
+3. Build containerts and start that:
 
 ```
 make docker-build
+```
+
+4. Manually configure Laravel env file or use:
+
+```
+make configure-laravel-env
 ```
 
 #### Hard way
 
 For launch development environment run following steps:
 
-1. Set up .env file in *mapstrom* path
+1. Set up .env file in root path
 
 ```
-**SITE_PORT** - port for HTTP 
-**SECURE_SITE_PORT** - port for HTTPS  
-**MYSQL_ROOT_PASSWORD** - password for root user  
-**MYSQL_DATABASE** - database name  
-**MAILHOG_WEB_PORT** - MailHog webinterface port
+SITE_PORT - port for HTTP 
+SECURE_SITE_PORT - port for HTTPS  
+MYSQL_ROOT_PASSWORD - password for root user  
+MYSQL_DATABASE - database name  
+MAILHOG_WEB_PORT - MailHog webinterface port
 ```
 
-2. Set up .env in *mapstrom/app* path ( Laravel configuration file )
+2. Set up .env in *app* path ( Laravel configuration file )
 
-3. Build and start project:
+3. Build containerts and start that:
 
 ```
 make docker-build
-```
-
-4. Quick DB setuping:
-
-```
-make init-db
 ```
 
 ### Useful tips
