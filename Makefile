@@ -8,20 +8,27 @@ BLUE="\033[0;34m"
 YEL="\033[0;33m"
 NC="\033[0m"
 
-build_laravel_root_dev 	:= "npm run dev; exit;"
-build_laravel_root_prod := "npm run prod; exit;"
+env									:= dev
 
-db_run_migrations		:= "php artisan migrate; exit;"
+build_laravel_frontend      		:= build_laravel_frontend_$(env)
+build_laravel_frontend_dev 			:= "npm run dev; exit;"
+build_laravel_frontend_prod 		:= "npm run prod; exit;"
 
-fresh_laravel_commands  := "cd /; composer create-project --prefer-dist laravel/laravel lartmp; cp -r /lartmp/. /application/; rm -rf /lartmp; chown -R www-data:www-data /application"
+build_laravel_backend      			:= build_laravel_backend_$(env)
+build_laravel_backend_dev 			:= "composer install; exit;"
+build_laravel_backend_prod 			:= "composer install; exit;"
 
-v1 						:= "docker-compose ps"
-v2						:= "docker-compose ps; docker-compose top"
-v3						:= "docker-compose ps; docker-compose top; docker-compose logs"
+db_run_migrations					:= "php artisan migrate; exit;"
 
-PROJECT_NAME			:= $(@shell grep 'PROJECT_NAME' .env | sed -e "s/^PROJECT_NAME=//" )
-DB_NAME					:= $(@shell grep 'MYSQL_DATABASE' .env | sed -e "s/^MYSQL_DATABASE=//" )
-DB_ROOT_PASSWORD		:= $(@shell grep 'MYSQL_ROOT_PASSWORD' .env | sed -e "s/^MYSQL_ROOT_PASSWORD=//" )
+fresh_laravel_commands  			:= "cd /; composer create-project --prefer-dist laravel/laravel lartmp; cp -r /lartmp/. /application/; rm -rf /lartmp; chown -R www-data:www-data /application"
+
+v1 									:= "docker-compose ps"
+v2									:= "docker-compose ps; docker-compose top"
+v3									:= "docker-compose ps; docker-compose top; docker-compose logs"
+
+PROJECT_NAME						:= $(@shell grep 'PROJECT_NAME' .env | sed -e "s/^PROJECT_NAME=//" )
+DB_NAME								:= $(@shell grep 'MYSQL_DATABASE' .env | sed -e "s/^MYSQL_DATABASE=//" )
+DB_ROOT_PASSWORD					:= $(@shell grep 'MYSQL_ROOT_PASSWORD' .env | sed -e "s/^MYSQL_ROOT_PASSWORD=//" )
 
 # BASIC
 
@@ -44,7 +51,7 @@ init-project:							#*# Initialize a new project.
 
 	make fresh-laravel
 	echo $(GREEN)"Done! Now you can manually configure your Laravel env file ( or use 'make configure-laravel-env' ) and start development."$(NC)
-	
+
 fresh-laravel:							#*# Download last Laravel version from repo.
 	make docker-start
 	@echo $(BLUE)"..........ATTENTION.........."$(NC)
@@ -165,14 +172,19 @@ test-phpunit: 							#*# Run phpunit tests.
 
 # BUILDS
 
-build-frontend: 						#*# Build front-end ( all cases ).
+build-laravel: 						#*# Build project( all cases ).
 	@echo $(BLUE)"Build all frontend components"$(NC)
 
 	make build-frontend-laravel
-
+	make build-backend-laravel
+	
 build-frontend-laravel: 				#*# Build front-end for laravel.
-	docker-compose exec php-fpm bash -c $(build_frontend_commands) \
-	|| docker-compose exec -T php-fpm bash -c $(build_frontend_commands)
+	docker-compose exec php-fpm bash -c $($(build_laravel_frontend)) \
+	|| docker-compose exec -T php-fpm bash -c $($(build_laravel_frontend))
+
+build-backend-laravel: 				#*# Build back-end for laravel.
+	docker-compose exec php-fpm bash -c $($(build_laravel_backend)) \
+	|| docker-compose exec -T php-fpm bash -c $($(build_laravel_backend))
 
 # DATABASE
 
