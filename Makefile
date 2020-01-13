@@ -26,9 +26,9 @@ v1 									:= "docker-compose ps"
 v2									:= "docker-compose ps; docker-compose top"
 v3									:= "docker-compose ps; docker-compose top; docker-compose logs"
 
-PROJECT_NAME						:= $(@shell grep 'PROJECT_NAME' .env | sed -e "s/^PROJECT_NAME=//" )
-DB_NAME								:= $(@shell grep 'MYSQL_DATABASE' .env | sed -e "s/^MYSQL_DATABASE=//" )
-DB_ROOT_PASSWORD					:= $(@shell grep 'MYSQL_ROOT_PASSWORD' .env | sed -e "s/^MYSQL_ROOT_PASSWORD=//" )
+PROJECT_NAME						:= $(shell grep 'PROJECT_NAME' .env | sed -e "s/^PROJECT_NAME=//" )
+DB_NAME								:= $(shell grep 'MYSQL_DATABASE' .env | sed -e "s/^MYSQL_DATABASE=//" )
+DB_ROOT_PASSWORD					:= $(shell grep 'MYSQL_ROOT_PASSWORD' .env | sed -e "s/^MYSQL_ROOT_PASSWORD=//" )
 
 # BASIC
 
@@ -172,17 +172,17 @@ test-phpunit: 							#*# Run phpunit tests.
 
 # BUILDS
 
-build-laravel: 						#*# Build project( all cases ).
+build-laravel: 							#*# Build project( all cases ).
 	@echo $(BLUE)"Build all frontend components"$(NC)
 
 	make build-frontend-laravel
 	make build-backend-laravel
-	
+
 build-frontend-laravel: 				#*# Build front-end for laravel.
 	docker-compose exec php-fpm bash -c $($(build_laravel_frontend)) \
 	|| docker-compose exec -T php-fpm bash -c $($(build_laravel_frontend))
 
-build-backend-laravel: 				#*# Build back-end for laravel.
+build-backend-laravel: 					#*# Build back-end for laravel.
 	docker-compose exec php-fpm bash -c $($(build_laravel_backend)) \
 	|| docker-compose exec -T php-fpm bash -c $($(build_laravel_backend))
 
