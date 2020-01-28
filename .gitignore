@@ -5,7 +5,8 @@
 *.key
 *.crt
 *.pem
-app
+api
+client
 
 # IDEs and text editors
 .idea
