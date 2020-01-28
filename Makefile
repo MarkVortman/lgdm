@@ -179,12 +179,12 @@ build-laravel: 							#*# Build project( all cases ).
 	make build-backend-laravel
 
 build-frontend-laravel: 				#*# Build front-end for laravel.
-	docker-compose exec php-fpm bash -c $($(build_laravel_frontend)) \
-	|| docker-compose exec -T php-fpm bash -c $($(build_laravel_frontend))
+	docker-compose exec fpm bash -c $($(build_laravel_frontend)) \
+	|| docker-compose exec -T fpm bash -c $($(build_laravel_frontend))
 
 build-backend-laravel: 					#*# Build back-end for laravel.
-	docker-compose exec php-fpm bash -c $($(build_laravel_backend)) \
-	|| docker-compose exec -T php-fpm bash -c $($(build_laravel_backend))
+	docker-compose exec fpm bash -c $($(build_laravel_backend)) \
+	|| docker-compose exec -T fpm bash -c $($(build_laravel_backend))
 
 # DATABASE
 
@@ -196,5 +196,5 @@ init-db: 								#*# Initialize DB migrations, seeds, Passport clients.
 db-migrations: 							#*# Run migrations.
 	@echo $(BLUE)"Run migrations"$(NC)
 
-	docker-compose exec php-fpm bash -c $(db_run_migrations) \
-	|| docker-compose exec -T php-fpm bash -c $(db_run_migrations)
+	docker-compose exec fpm bash -c $(db_run_migrations) \
+	|| docker-compose exec -T fpm bash -c $(db_run_migrations)
